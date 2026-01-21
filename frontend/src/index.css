@@ -1,0 +1,35 @@
+:root {
+  color-scheme: dark;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background:
+    radial-gradient(900px 600px at 20% 10%, rgba(79, 124, 255, 0.28), transparent 60%),
+    radial-gradient(800px 520px at 75% 20%, rgba(34, 197, 94, 0.14), transparent 55%),
+    radial-gradient(700px 520px at 50% 95%, rgba(255, 185, 54, 0.10), transparent 55%),
+    #0B1220;
+}
+
+a {
+  color: inherit;
+}

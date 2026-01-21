@@ -1,0 +1,22 @@
+{
+  "C_Cpp.intelliSenseEngine": "default",
+  "idf.espIdfPath": "/home/user/esp/v5.5.2/esp-idf",
+  "idf.pythonInstallPath": "/usr/bin/python3",
+  "idf.projectDirPath": "${workspaceFolder}",
+  "idf.openOcdConfigs": [
+    "board/esp32c6-builtin.cfg"
+  ],
+  "idf.port": "detect",
+  "idf.toolsPath": "/home/user/.espressif",
+  "idf.customExtraVars": {
+    "IDF_TARGET": "esp32c6"
+  },
+  "cmake.cmakePath": "/home/user/.espressif/tools/cmake/3.30.2/bin/cmake",
+  "idf.buildPath": "${workspaceFolder}/build",
+  "clangd.path": "/home/user/.espressif/tools/esp-clang/esp-19.1.2_20250312/esp-clang/bin/clangd",
+  "clangd.arguments": [
+    "--background-index",
+    "--query-driver=**",
+    "--compile-commands-dir=/home/user/Documents/mchacks-pothole-detector/robot-firmware/build"
+  ]
+}

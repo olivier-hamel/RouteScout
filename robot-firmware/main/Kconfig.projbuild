@@ -1,0 +1,128 @@
+menu "Project Configuration"
+
+    orsource "$IDF_PATH/examples/common_components/env_caps/$IDF_TARGET/Kconfig.env_caps"
+
+    config I2C_MASTER_SCL
+        int "SCL GPIO Num"
+        range ENV_GPIO_RANGE_MIN ENV_GPIO_OUT_RANGE_MAX
+        default 7
+        help
+            GPIO number for I2C Master clock line.
+
+    config I2C_MASTER_SDA
+        int "SDA GPIO Num"
+        range ENV_GPIO_RANGE_MIN ENV_GPIO_OUT_RANGE_MAX
+        default 6
+        help
+            GPIO number for I2C Master data line.
+
+    config I2C_MASTER_FREQUENCY
+        int "Master Frequency"
+        default 400000
+        help
+            I2C Speed of Master device.
+
+    menu "micro-ROS"
+
+        config ROBOT_MICRO_ROS_NAV2_BRIDGE
+            bool "Enable micro-ROS Nav2 bridge (/odom, /tf, /cmd_vel)"
+            default y
+            depends on MICRO_ROS_ESP_XRCE_DDS_MIDDLEWARE
+            depends on MICRO_ROS_ESP_UART_TRANSPORT
+            help
+                Starts a micro-ROS node that exposes Nav2-friendly topics: /odom, /tf, and /cmd_vel
+                using the custom UART transport.
+
+        config ROBOT_MICRO_ROS_ODOM_PERIOD_MS
+            int "Odometry publish period (ms)"
+            default 50
+            depends on ROBOT_MICRO_ROS_NAV2_BRIDGE
+            range 10 200
+            help
+                Controls how often /odom and /tf are published. 50 ms (20 Hz) is a reasonable default
+                for Nav2.
+
+        config ROBOT_MICRO_ROS_APP_STACK
+            int "Stack for micro-ROS task (bytes)"
+            default 16000
+            depends on ROBOT_MICRO_ROS_NAV2_BRIDGE
+
+        config ROBOT_MICRO_ROS_APP_TASK_PRIO
+            int "Priority for micro-ROS task"
+            default 5
+            depends on ROBOT_MICRO_ROS_NAV2_BRIDGE
+
+        config ROBOT_MICRO_ROS_UART_PORT
+            int "UART port for micro-ROS (0=UART0, 1=UART1)"
+            range 0 1
+            default 1
+            depends on ROBOT_MICRO_ROS_NAV2_BRIDGE
+            help
+                UART number used by micro-ROS serial transport. UART1 is recommended to avoid conflicts
+                with the default console on UART0.
+
+        config ROBOT_MICRO_ROS_UART_BAUDRATE
+            int "UART baudrate for micro-ROS"
+            default 460800
+            depends on ROBOT_MICRO_ROS_NAV2_BRIDGE
+
+        config ROBOT_CMD_VEL_TIMEOUT_MS
+            int "cmd_vel timeout (ms)"
+            default 300
+            depends on ROBOT_MICRO_ROS_NAV2_BRIDGE
+            range 50 2000
+            help
+                If /cmd_vel is not received for this long, the robot command is forced to zero.
+
+        config ROBOT_ODOM_FUSE_IMU_YAW
+            bool "Fuse IMU yaw into odometry integration"
+            default y
+            depends on ROBOT_MICRO_ROS_NAV2_BRIDGE
+            help
+                Uses IMU yaw for odometry heading integration (x/y uses IMU-based theta). This
+                improves odom accuracy when wheels are not perfectly aligned.
+
+        config ROBOT_TWIST_YAW_PID_ENABLE
+            bool "Enable IMU yaw PID on /cmd_vel"
+            default y
+            depends on ROBOT_MICRO_ROS_NAV2_BRIDGE
+            help
+                Adds a yaw-tracking controller that uses IMU yaw to correct /cmd_vel angular.z so
+                the robot holds heading when going straight and turns closer to the commanded yaw.
+
+        config ROBOT_TWIST_YAW_PID_KP_MILLI
+            int "Yaw PID Kp (x1000)"
+            default 1800
+            depends on ROBOT_TWIST_YAW_PID_ENABLE
+
+        config ROBOT_TWIST_YAW_PID_KI_MILLI
+            int "Yaw PID Ki (x1000)"
+            default 0
+            depends on ROBOT_TWIST_YAW_PID_ENABLE
+
+        config ROBOT_TWIST_YAW_PID_KD_MILLI
+            int "Yaw PID Kd (x1000)"
+            default 60
+            depends on ROBOT_TWIST_YAW_PID_ENABLE
+
+        config ROBOT_TWIST_YAW_PID_MAX_CORRECTION_MRADPS
+            int "Max yaw correction (mrad/s)"
+            default 1200
+            depends on ROBOT_TWIST_YAW_PID_ENABLE
+            range 0 5000
+
+        config ROBOT_TWIST_YAW_PID_INTEGRAL_LIMIT_MRAD
+            int "Integral limit (mrad*s)"
+            default 2000
+            depends on ROBOT_TWIST_YAW_PID_ENABLE
+            range 0 20000
+
+        config ROBOT_TWIST_MAX_ANGULAR_MRADPS
+            int "Max commanded angular.z (mrad/s)"
+            default 2000
+            depends on ROBOT_MICRO_ROS_NAV2_BRIDGE
+            range 0 8000
+
+    endmenu
+
+endmenu
